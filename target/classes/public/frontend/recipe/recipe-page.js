@@ -57,22 +57,49 @@ window.addEventListener("DOMContentLoaded", () => {
      * - Search button → searchRecipes()
      * - Logout button → processLogout()
      */
-    
+    addRecipeSubmitInput.onclick = addRecipe;
+    updateRecipeSubmitInput.onclick = updateRecipe;
+    deleteRecipeSubmitInput.onclick = deleteRecipe;
+    searchButtonInput.onclick = searchRecipes;
+    logoutButtonInput.onclick = processLogout;
 
     /*
-     * TODO: On page load, call getRecipes() to populate the list
+     * On page load, call getRecipes() to populate the list
      */
-
+    getRecipes();
 
     /**
-     * TODO: Search Recipes Function
+     * Search Recipes Function
      * - Read search term from input field
      * - Send GET request with name query param
      * - Update the recipe list using refreshRecipeList()
      * - Handle fetch errors and alert user
      */
     async function searchRecipes() {
-        // Implement search logic here
+        const searchTerm = searchInput.value;
+        const requestOptions = {
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+        }; 
+        try {
+            const response = await fetch(`${BASE_URL}/recipes?name=${searchTerm}`, requestOptions);
+            
+        } catch (error) {
+            // Handle any network or unexpected errors
+            // - Log the error and alert the user
+            console.log(error);
+            alert("Uh-oh, an error occurred!");
+        }
     }
 
     /**
@@ -121,7 +148,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * TODO: Refresh Recipe List Function
+     * Refresh Recipe List Function
      * - Clear current list in DOM
      * - Create <li> elements for each recipe with name + instructions
      * - Append to list container

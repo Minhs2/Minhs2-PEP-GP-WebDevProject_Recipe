@@ -83,7 +83,7 @@ async function processLogin() {
 
     try {
         // Send POST request to http://localhost:8081/login using fetch with requestOptions
-        const postResponse = await fetch(`http://localhost:8081/login`, requestOptions);
+        const postResponse = await fetch(`${BASE_URL}/login`, requestOptions);
 
         // If response status is 200
         if ( postResponse.status == 200 ) {
