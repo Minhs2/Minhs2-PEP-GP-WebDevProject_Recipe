@@ -119,7 +119,7 @@ async function getIngredients() {
         if (response.ok) {
             const respJson = response.json();
             for (var i = 0; i < respJson.length; i++){
-
+                
             }
             return;
         }
