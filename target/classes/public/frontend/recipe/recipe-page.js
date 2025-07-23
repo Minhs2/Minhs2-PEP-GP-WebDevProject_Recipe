@@ -210,7 +210,7 @@ window.addEventListener("DOMContentLoaded", () => {
             referrerPolicy: "no-referrer"
         }; 
         const putRequest = {
-            method: "GET",
+            method: "PUT",
             mode: "cors",
             cache: "no-cache",
             credentials: "same-origin",
@@ -236,30 +236,103 @@ window.addEventListener("DOMContentLoaded", () => {
 
                     // Get and refresh recipes
                     getRecipes();
+                    return;
+                } else if (putResponse.status = 404) {
+                    console.log("Error fetching recipe ID.");
+                    alert("Error fetching recipe ID.");
+                    return;
                 }
             }
 
             else if (getResponse.status = 404) {
                 console.log(`No recipes with name ${updateRecipeName} found.`);
                 alert(`No recipes with name ${updateRecipeName} found.`);
+                return;
             }
+            console.log(`Unexpected status.`);
+            alert("Uh-oh, an error occurred: Unexpected status.");
+            return;
         } catch (error) {
             console.log(error);
             alert("Uh-oh, an error occurred!");
+            return;
         }
 
 
     }
 
     /**
-     * TODO: Delete Recipe Function
+     * Delete Recipe Function
      * - Get recipe name from delete input
      * - Find matching recipe in list to get its ID
      * - Send DELETE request using recipe ID
      * - On success: refresh the list
      */
     async function deleteRecipe() {
-        // Implement delete logic here
+        const deleteRecipeName = deleteRecipeNameInput.value;
+        const requestBody = { deleteRecipeName };
+        const getRequest = {
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer"
+        }; 
+        const delRequest = {
+            method: "DELETE",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify(requestBody)
+        }; 
+        try {
+            const getResponse = await fetch (`${BASE_URL}/recipes?name=${deleteRecipeName}`, getRequest);
+            if (getResponse.ok) {
+                const recipeID = await getResponse.json()[0].id;
+                const delResponse = await fetch(`${BASE_URL}/recipes/${recipeID}`, delRequest);
+                if (delResponse.ok) { 
+                    // Clear inputs
+                    deleteRecipeName.value = '';
+
+                    // Get and refresh recipes
+                    getRecipes();
+                    return;
+
+                } else if (putResponse.status = 404) {
+                    console.log("Error fetching recipe ID.");
+                    alert("Error fetching recipe ID.");
+                    return;
+                }
+            }
+
+            else if (getResponse.status = 404) {
+                console.log(`No recipes with name ${updateRecipeName} found.`);
+                alert(`No recipes with name ${updateRecipeName} found.`);
+                return;
+            }
+            console.log(`Unexpected status.`);
+            alert("Uh-oh, an error occurred: Unexpected status.");
+            return;
+        } catch (error) {
+            console.log(error);
+            alert("Uh-oh, an error occurred!");
+            return;
+        }
     }
 
     /**
@@ -321,14 +394,41 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * TODO: Logout Function
+     * Logout Function
      * - Send POST request to /logout
      * - Use Bearer token from sessionStorage
      * - On success: clear sessionStorage and redirect to login
      * - On failure: alert the user
      */
     async function processLogout() {
-        // Implement logout logic here
+        const requestOptions = {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer"
+        }; 
+        try {
+            const response = await fetch (`${BASE_URL}/logout`, requestOptions);
+            if (response.ok) {
+                sessionStorage.clear();
+                window.location.href = "../login/login-page.html";
+                return;
+            }
+            console.log("Couldn't log out.");
+            alert("Couldn't log out. Try again.");
+            return;
+        } catch (error) {
+            console.log(error);
+            alert("Uh-oh, an error occurred!");
+        }
     }
 
 });
