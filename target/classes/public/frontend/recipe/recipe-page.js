@@ -178,13 +178,45 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * TODO: Get Recipes Function
+     * Get Recipes Function
      * - Fetch all recipes from backend
      * - Store in recipes array
      * - Call refreshRecipeList() to display
      */
     async function getRecipes() {
-        // Implement get logic here
+        const requestOptions = {
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer"
+        }; 
+        try {
+            const response = await fetch (`${BASE_URL}/recipes`, requestOptions)
+            if (response.ok) {
+                const recipes = await response.json();
+                refreshRecipeList(recipes);
+                return;
+            }
+            else if (response.status = 404) {
+                console.log("No recipes found.");
+                alert("No recipes found.");
+                return;
+            }
+            console.log("Non 200 or 404 status from GET in getRecipes().");
+            alert("Uh-oh, an error occurred!");
+            return;
+        } catch (error) {
+            console.log(error);
+            alert("Uh-oh, an error occurred!");
+        }
     }
 
     /**
