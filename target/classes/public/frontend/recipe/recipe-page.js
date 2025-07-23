@@ -8,7 +8,6 @@ let recipes = [];
 
 // Wait for DOM to fully load before accessing elements
 window.addEventListener("DOMContentLoaded", () => {
-
     /* 
      * Get references to various DOM elements
      * - Recipe name and instructions fields (add, update, delete)
@@ -92,8 +91,8 @@ window.addEventListener("DOMContentLoaded", () => {
             referrerPolicy: "no-referrer",
         }; 
         try {
-            const response = await fetch(`${BASE_URL}/recipes?name=${searchTerm}`, requestOptions);
-            
+            const response = await fetch(`${BASE_URL}/recipes?term=${searchTerm}`, requestOptions);
+
             if (response.ok) {
                 const recipiesToShow = await response.json();
                 refreshRecipeList(recipiesToShow);
@@ -163,7 +162,6 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     function refreshRecipeList(recipiesToShow) {
         recipeListInput.innerHTML = '';
-
         for (var i = 0; i < recipiesToShow.length; i++) {
             var recipe = recipiesToShow[i];
             var listElement = document.createElement('li');

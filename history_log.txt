@@ -1,7 +1,7 @@
-commit 4cb55ea163c8461e45f07bd11fdeeec8c78bc9cd
+commit d3c6f878305da16087710d48c9e2baa26bd2ab98
 Author: Minh Pham <minhs2@yahoo.com>
-Date:   Wed Jul 23 09:12:42 2025 +0000
+Date:   Wed Jul 23 09:18:24 2025 +0000
 
-    Made email empty to pass registration test
+    RegisterTest + LoginTest good
 
- 3 files changed, 12 insertions(+), 4 deletions(-)
+ 3 files changed, 11 insertions(+), 4 deletions(-)

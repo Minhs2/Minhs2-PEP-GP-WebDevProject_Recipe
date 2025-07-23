@@ -48,7 +48,7 @@ async function processLogin() {
     // Retrieve username and password from input fields
     // - Trim input and validate that neither is empty
     const username = usernameInput.value.trim();
-    const password = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
 
         if (!username) {
             console.log("Username empty.");
@@ -96,16 +96,16 @@ async function processLogin() {
             const [token, isAdmin] = responseText.split(' ');
 
             // - Store both in sessionStorage using sessionStorage.setItem()
-            sessionStorage.setItem('token', token);
-            sessionStorage.setItem('isAdmin', isAdmin);
-            
+            sessionStorage.setItem("auth-token", token);
+            sessionStorage.setItem("is-admin", isAdmin);
+
             // Optionally show the logout button if applicable
             logoutButtonInput.hidden = false;
 
             // Add a small delay (e.g., 500ms) using setTimeout before redirecting
             // - Use window.location.href to redirect to the recipe page
             setTimeout(() => {
-                window.location.href = `${BASE_URL}/recipe/recipe-page.html`; 
+                window.location.href = "../recipe/recipe-page.html";
             }, 500);
             return;
             
