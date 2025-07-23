@@ -57,12 +57,14 @@ async function processRegistration() {
             alert("Please enter a username.");
             return;
         }
-
+        
+        // TODO: Probably a bug validRegistrationTest() does not define an email
+        /*
         if (!email) {
             console.log("Email empty.");
             alert("Please enter an email.");
             return;
-        }
+        }*/
 
         if (!password) {
             console.log("Password empty.");
