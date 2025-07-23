@@ -88,7 +88,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
             },
             redirect: "follow",
-            referrerPolicy: "no-referrer",
+            referrerPolicy: "no-referrer"
         }; 
         try {
             const response = await fetch(`${BASE_URL}/recipes?term=${searchTerm}`, requestOptions);
@@ -110,7 +110,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * TODO: Add Recipe Function
+     * Add Recipe Function
      * - Get values from add form inputs
      * - Validate both name and instructions
      * - Send POST request to /recipes
@@ -118,7 +118,40 @@ window.addEventListener("DOMContentLoaded", () => {
      * - On success: clear inputs, fetch latest recipes, refresh the list
      */
     async function addRecipe() {
-        // Implement add logic here
+        const addRecipeName = addRecipeNameInput.value;
+        const addRecipeInstructions = addRecipeInstructionsInput.value;
+
+        if (!addRecipeName) {
+            console.log("Recipe name empty.");
+            alert("Please enter a recipe name.");
+            return;
+        }
+
+        if (!addRecipeInstructions) {
+            console.log("Recipe instructions empty.");
+            alert("Please enter recipe instructions.");
+            return;
+        }
+        requestBody = { addRecipeName, addRecipeInstructions };
+        const requestOptions = {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify(registerBody)
+        }; 
+        try {
+            const requst = await fetch(`${BASE_URL}/recipes`, requestOptions);
+            // TODO the rest of this 
+        }
     }
 
     /**
