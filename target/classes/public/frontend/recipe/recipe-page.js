@@ -120,7 +120,7 @@ window.addEventListener("DOMContentLoaded", () => {
     async function addRecipe() {
         const addRecipeName = addRecipeNameInput.value;
         const addRecipeInstructions = addRecipeInstructionsInput.value;
-
+        
         if (!addRecipeName) {
             console.log("Recipe name empty.");
             alert("Please enter a recipe name.");
@@ -132,7 +132,7 @@ window.addEventListener("DOMContentLoaded", () => {
             alert("Please enter recipe instructions.");
             return;
         }
-        requestBody = { addRecipeName, addRecipeInstructions };
+        const requestBody = { addRecipeName, addRecipeInstructions };
         const requestOptions = {
             method: "POST",
             mode: "cors",
@@ -146,16 +146,34 @@ window.addEventListener("DOMContentLoaded", () => {
             },
             redirect: "follow",
             referrerPolicy: "no-referrer",
-            body: JSON.stringify(registerBody)
+            body: JSON.stringify(requestBody)
         }; 
         try {
-            const requst = await fetch(`${BASE_URL}/recipes`, requestOptions);
-            // TODO the rest of this 
+            const response = await fetch(`${BASE_URL}/recipes`, requestOptions);
+            if (response.ok) {
+                // Clear inputs
+                addRecipeNameInput.value = '';
+                addRecipeInstructionsInput.value = '';
+
+                // Fetch latest and refresh list
+                getRecipes();
+
+            }
+
+            // 401 means chef auth failed
+            else if (response.status = 401) {
+                console.log("Chef authentication failed.");
+                alert("Chef failed to authenticate.");
+                return;
+            }
+        } catch (error) {
+            console.log(error);
+            alert("Uh-oh, an error occurred!");
         }
     }
 
     /**
-     * TODO: Update Recipe Function
+     * Update Recipe Function
      * - Get values from update form inputs
      * - Validate both name and updated instructions
      * - Fetch current recipes to locate the recipe by name
@@ -163,7 +181,74 @@ window.addEventListener("DOMContentLoaded", () => {
      * - On success: clear inputs, fetch latest recipes, refresh the list
      */
     async function updateRecipe() {
-        // Implement update logic here
+        const updateRecipeName = updateRecipeNameInput.value;
+        const updateRecipeInstructions = updateRecipeInstructionsInput.value;
+        if (!updateRecipeName) {
+            console.log("Recipe name empty.");
+            alert("Please enter a recipe name.");
+            return;
+        }
+
+        if (!updateRecipeInstructions) {
+            console.log("Recipe instructions empty.");
+            alert("Please enter recipe instructions.");
+            return;
+        }
+        const requestBody = { updateRecipeName, updateRecipeInstructions };
+        const getRequest = {
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer"
+        }; 
+        const putRequest = {
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify(requestBody)
+        }; 
+        try {
+            const getResponse = await fetch (`${BASE_URL}/recipes?name=${updateRecipeName}`, getRequest);
+            if (getResponse.ok) {
+                const recipeID = await getResponse.json()[0].id;
+                const putResponse = await fetch(`${BASE_URL}/recipes/${recipeID}`, putRequest);
+                if (putResponse.ok) { 
+                    // Clear inputs
+                    updateRecipeNameInput.value = '';
+                    updateRecipeInstructionsInput.value = '';
+
+                    // Get and refresh recipes
+                    getRecipes();
+                }
+            }
+
+            else if (getResponse.status = 404) {
+                console.log(`No recipes with name ${updateRecipeName} found.`);
+                alert(`No recipes with name ${updateRecipeName} found.`);
+            }
+        } catch (error) {
+            console.log(error);
+            alert("Uh-oh, an error occurred!");
+        }
+
+
     }
 
     /**
