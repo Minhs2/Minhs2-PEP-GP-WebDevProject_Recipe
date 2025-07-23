@@ -117,10 +117,16 @@ async function getIngredients() {
     try {
         const response = await fetch(`${BASE_URL}/ingredients`, requestOptions);
         if (response.ok) {
-            const respJson = response.json();
+            // Clear ingredients
+            ingredientArray = [];
+            const respJson = await response.json();
             for (var i = 0; i < respJson.length; i++){
-                
+                ingredientArray[i] = {
+                    id: respJson[i].id,
+                    name: respJson[i].name
+                }
             }
+            refreshIngredientList();
             return;
         }
         console.log(`Uh-oh, an error occurred!: ${response.status}`);
@@ -134,7 +140,7 @@ async function getIngredients() {
 
 
 /**
- * TODO: Delete Ingredient Function
+ * Delete Ingredient Function
  * 
  * Requirements:
  * - Read and trim value from deleteIngredientNameInput
@@ -145,12 +151,47 @@ async function getIngredients() {
  * - On failure or not found: alert the user
  */
 async function deleteIngredient() {
-    // Implement delete ingredient logic here
+    const deleteIngredientName = deleteIngredientNameInput.value.trim();
+    const listItems = ingredientListContainer.querySelectorAll('li');
+    var targetIngredient = null;
+    for (var i = 0; i < listItems.length; i++) {
+        const pHtml = item.querySelector('p');
+        if (pHtml.innerText.trim() == deleteIngredientName){
+            targetIngredient = listItems[i];
+            break;
+        }
+    }
+
+    const ingredientId = ingredientToDelete.querySelector('p').id;
+    const requestOptions = {
+        method: "DELETE",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+        },
+        redirect: "follow",
+        referrerPolicy: "no-referrer"
+    };
+    try {
+        const response = await fetch(`${BASE_URL}/ingredients/${ingredientId}`, DELETE);
+        if (response.ok) {
+            deleteIngredientNameInput.value = '';
+            getIngredients();
+        }
+    } catch (error) {
+        console.log(error);
+        alert("Uh-oh, an error occurred!");
+    }
 }
 
 
 /**
- * TODO: Refresh Ingredient List Function
+ * Refresh Ingredient List Function
  * 
  * Requirements:
  * - Clear ingredientListContainer
@@ -160,5 +201,11 @@ async function deleteIngredient() {
  *   - Append to container
  */
 function refreshIngredientList() {
-    // Implement ingredient list rendering logic here
+    ingredientListContainer.innerHTML = '';
+    for (var i = 0; i < ingredientArray.length; i++) {
+        var ingredient = ingredientArray[i];
+        var listElement = document.createElement('li');
+        listElement.innerHTML = `<p id=${ingredient.id} > ${ingredient.name} </p>`
+        ingredientListContainer.appendChild(listElement);
+    }
 }
