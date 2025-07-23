@@ -94,9 +94,17 @@ window.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch(`${BASE_URL}/recipes?name=${searchTerm}`, requestOptions);
             
+            if (response.ok) {
+                const recipiesToShow = await response.json();
+                refreshRecipeList(recipiesToShow);
+                return;
+            }
+
+            console.log("Non 2xx status from GET in searchRecipes().");
+            alert("Uh-oh, an error occurred!");
+            return;
+
         } catch (error) {
-            // Handle any network or unexpected errors
-            // - Log the error and alert the user
             console.log(error);
             alert("Uh-oh, an error occurred!");
         }
@@ -153,8 +161,15 @@ window.addEventListener("DOMContentLoaded", () => {
      * - Create <li> elements for each recipe with name + instructions
      * - Append to list container
      */
-    function refreshRecipeList() {
-        // Implement refresh logic here
+    function refreshRecipeList(recipiesToShow) {
+        recipeListInput.innerHTML = '';
+
+        for (var i = 0; i < recipiesToShow.length; i++) {
+            var recipe = recipiesToShow[i];
+            var listElement = document.createElement('li');
+            listElement.innerHTML = `<p> ${recipe.name}\n${recipe.instructions} </p>`
+            recipeListInput.appendChild(listElement);
+        }
     }
 
     /**
