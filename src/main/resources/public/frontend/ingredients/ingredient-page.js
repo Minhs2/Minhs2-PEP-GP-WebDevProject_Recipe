@@ -5,31 +5,41 @@
 const BASE_URL = "http://localhost:8081"; // backend URL
 
 /* 
- * TODO: Get references to various DOM elements
+ * Get references to various DOM elements
  * - addIngredientNameInput
  * - deleteIngredientNameInput
  * - ingredientListContainer
  * - searchInput (optional for future use)
  * - adminLink (if visible conditionally)
  */
+const addIngredientNameInput = document.getElementById("add-ingredient-name-input");
+const deleteIngredientNameInput = document.getElementById("delete-ingredient-name-input");
+const ingredientListContainer = document.getElementById("ingredient-list");
+
+const addIngredientButton = document.getElementById("add-ingredient-submit-button");
+const deleteIngredientButton = document.getElementById("delete-ingredient-submit-button");
+
+// const adminLink = document.getElementById("back-link");
 
 /* 
- * TODO: Attach 'onclick' events to:
+ * Attach 'onclick' events to:
  * - "add-ingredient-submit-button" → addIngredient()
  * - "delete-ingredient-submit-button" → deleteIngredient()
  */
+addIngredientButton.onclick = addIngredient;
+deleteIngredientButton.onclick = deleteIngredient;
 
 /*
- * TODO: Create an array to keep track of ingredients
+ * Create an array to keep track of ingredients
  */
-
+var ingredientArray = [];
 /* 
- * TODO: On page load, call getIngredients()
+ * On page load, call getIngredients()
  */
-
+getIngredients();
 
 /**
- * TODO: Add Ingredient Function
+ * Add Ingredient Function
  * 
  * Requirements:
  * - Read and trim value from addIngredientNameInput
@@ -40,12 +50,48 @@ const BASE_URL = "http://localhost:8081"; // backend URL
  * - On failure: alert the user
  */
 async function addIngredient() {
-    // Implement add ingredient logic here
+    addIngredientName = addIngredientNameInput.value.trim();
+
+    if (!addIngredientName) {
+        console.log("Ingredient name empty.");
+        alert("Please enter ingredient name.");
+        return;
+    }
+    const requestBody = { addIngredientName };
+    const requestOptions = {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+        },
+        redirect: "follow",
+        referrerPolicy: "no-referrer",
+        body: JSON.stringify(requestBody)
+    };
+    try {
+        const response = await fetch(`${BASE_URL}/ingredients`, requestOptions);
+        if (response.ok) {
+            addIngredientNameInput.value = '';
+            getIngredients();
+            return;
+        }
+        console.log(`Uh-oh, an error occurred!: ${response.status}`);
+        alert(`Uh-oh, an error occurred!: ${response.status}`);
+        return;
+    } catch (error) {
+        console.log(error);
+        alert("Uh-oh, an error occurred!");
+    }
 }
 
 
 /**
- * TODO: Get Ingredients Function
+ * Get Ingredients Function
  * 
  * Requirements:
  * - Fetch all ingredients from backend
@@ -54,7 +100,36 @@ async function addIngredient() {
  * - On error: alert the user
  */
 async function getIngredients() {
-    // Implement get ingredients logic here
+    const requestOptions = {
+        method: "GET",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Authorization": "Bearer " + sessionStorage.getItem("auth-token")
+        },
+        redirect: "follow",
+        referrerPolicy: "no-referrer"
+    };
+    try {
+        const response = await fetch(`${BASE_URL}/ingredients`, requestOptions);
+        if (response.ok) {
+            const respJson = response.json();
+            for (var i = 0; i < respJson.length; i++){
+                
+            }
+            return;
+        }
+        console.log(`Uh-oh, an error occurred!: ${response.status}`);
+        alert(`Uh-oh, an error occurred!: ${response.status}`);
+        return;
+    } catch (error) {
+        console.log(error);
+        alert("Uh-oh, an error occurred!");
+    }
 }
 
 
