@@ -16,24 +16,48 @@ window.addEventListener("DOMContentLoaded", () => {
      * - Admin link and logout button
      * - Search input
     */
-   
+    const adminLinkInput = document.getElementById("admin-link");
+    const logoutButtonInput = document.getElementById("logout-button");
+
+    const searchInput = document.getElementById("search-input");
+    const searchButtonInput = document.getElementById("search-button");
+
+    const recipeListInput = document.getElementById("recipe-list");
+
+    const addRecipeNameInput = document.getElementById("add-recipe-name-input" );
+    const addRecipeInstructionsInput = document.getElementById("add-recipe-instructions-input");
+    const addRecipeSubmitInput = document.getElementById("add-recipe-submit-input");
+
+    const updateRecipeNameInput = document.getElementById("update-recipe-name-input");
+    const updateRecipeInstructionsInput = document.getElementById("update-recipe-instructions-input");
+    const updateRecipeSubmitInput = document.getElementById("update-recipe-submit-input");
+
+    const deleteRecipeNameInput = document.getElementById("delete-recipe-name-input");
+    const deleteRecipeSubmitInput = document.getElementById("delete-recipe-submit-input");
 
     /*
-     * TODO: Show logout button if auth-token exists in sessionStorage
+     * Show logout button if auth-token exists in sessionStorage
      */
+    if (sesstionStorage.getItem('token')) {
+        logoutButtonInput.hidden = false;
+    }
 
     /*
-     * TODO: Show admin link if is-admin flag in sessionStorage is "true"
+     * Show admin link if is-admin flag in sessionStorage is "true"
      */
+    if (sesstionStorage.getItem('isAdmin')) {
+        adminLinkInput.hidden = false;
+    }
 
     /*
-     * TODO: Attach event handlers
+     * Attach event handlers
      * - Add recipe button → addRecipe()
      * - Update recipe button → updateRecipe()
      * - Delete recipe button → deleteRecipe()
      * - Search button → searchRecipes()
      * - Logout button → processLogout()
      */
+    
 
     /*
      * TODO: On page load, call getRecipes() to populate the list
