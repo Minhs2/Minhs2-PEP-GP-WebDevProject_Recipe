@@ -20,7 +20,7 @@ const logoutButtonInput = document.getElementById("logout-button");
  * click event listener to login button
  * - Call processLogin on click
  */
-loginButton.onclick = processLogin;
+loginButtonInput.onclick = processLogin;
 
 /**
  * Process Login Function
@@ -105,7 +105,7 @@ async function processLogin() {
             // Add a small delay (e.g., 500ms) using setTimeout before redirecting
             // - Use window.location.href to redirect to the recipe page
             setTimeout(() => {
-                window.location.href = '/recipes.html'; 
+                window.location.href = `${BASE_URL}/recipe/recipe-page.html`; 
             }, 500);
             return;
             

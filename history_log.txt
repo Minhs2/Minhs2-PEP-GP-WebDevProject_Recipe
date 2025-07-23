@@ -1,0 +1,7 @@
+commit 4cb55ea163c8461e45f07bd11fdeeec8c78bc9cd
+Author: Minh Pham <minhs2@yahoo.com>
+Date:   Wed Jul 23 09:12:42 2025 +0000
+
+    Made email empty to pass registration test
+
+ 3 files changed, 12 insertions(+), 4 deletions(-)
