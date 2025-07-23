@@ -107,16 +107,16 @@ async function processRegistration() {
         const postResponse = await fetch(`${BASE_URL}/register`, requestOptions);
 
         // If status is 201:
-        if (postResponse == 201) {
+        if (postResponse.status == 201) {
             // Redirect user to login page
             window.location.replace("../login/login-page.html");
             return;
         }
 
         // If status is 409:
-        if (postResponse == 409) {
+        if (postResponse.status == 409) {
             // Alert that user/email already exists
-            console.log("Email already exists");
+            console.log("Email already exists.");
             alert("Email already exists!");
             return;
         }

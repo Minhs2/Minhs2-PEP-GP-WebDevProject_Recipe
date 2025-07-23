@@ -10,12 +10,13 @@ let recipes = [];
 window.addEventListener("DOMContentLoaded", () => {
 
     /* 
-     * TODO: Get references to various DOM elements
+     * Get references to various DOM elements
      * - Recipe name and instructions fields (add, update, delete)
      * - Recipe list container
      * - Admin link and logout button
      * - Search input
     */
+   
 
     /*
      * TODO: Show logout button if auth-token exists in sessionStorage
