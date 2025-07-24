@@ -1,7 +1,7 @@
-commit a8e52945213070b55e2d3ff08a68c0a00882adca
+commit 54cf210ddf5199c6b07abd870af6eeb7b8a4ca21
 Author: Minh Pham <minhs2@yahoo.com>
-Date:   Wed Jul 23 10:32:28 2025 +0000
+Date:   Thu Jul 24 00:01:47 2025 +0000
 
-    115/123 Tests: Finish Recipe, Ingredient
+    fixed Ingredient functions
 
- 8 files changed, 20 insertions(+), 22 deletions(-)
+ 5 files changed, 66 insertions(+), 52 deletions(-)
