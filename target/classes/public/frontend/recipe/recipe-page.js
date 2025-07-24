@@ -23,7 +23,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const recipeListInput = document.getElementById("recipe-list");
 
-    const addRecipeNameInput = document.getElementById("add-recipe-name-input" );
+    const addRecipeNameInput = document.getElementById("add-recipe-name-input");
     const addRecipeInstructionsInput = document.getElementById("add-recipe-instructions-input");
     const addRecipeSubmitInput = document.getElementById("add-recipe-submit-input");
 
@@ -37,14 +37,14 @@ window.addEventListener("DOMContentLoaded", () => {
     /*
      * Show logout button if auth-token exists in sessionStorage
      */
-    if (sesstionStorage.getItem('token')) {
+    if (sessionStorage.getItem('auth-token')) {
         logoutButtonInput.hidden = false;
-    }
+    } 
 
     /*
      * Show admin link if is-admin flag in sessionStorage is "true"
      */
-    if (sesstionStorage.getItem('isAdmin')) {
+    if (sessionStorage.getItem('is-admin') == "true") {
         adminLinkInput.hidden = false;
     }
 
@@ -89,7 +89,7 @@ window.addEventListener("DOMContentLoaded", () => {
             },
             redirect: "follow",
             referrerPolicy: "no-referrer"
-        }; 
+        };
         try {
             const response = await fetch(`${BASE_URL}/recipes?term=${searchTerm}`, requestOptions);
 
@@ -120,7 +120,7 @@ window.addEventListener("DOMContentLoaded", () => {
     async function addRecipe() {
         const addRecipeName = addRecipeNameInput.value;
         const addRecipeInstructions = addRecipeInstructionsInput.value;
-        
+
         if (!addRecipeName) {
             console.log("Recipe name empty.");
             alert("Please enter a recipe name.");
@@ -147,7 +147,7 @@ window.addEventListener("DOMContentLoaded", () => {
             redirect: "follow",
             referrerPolicy: "no-referrer",
             body: JSON.stringify(requestBody)
-        }; 
+        };
         try {
             const response = await fetch(`${BASE_URL}/recipes`, requestOptions);
             if (response.ok) {
@@ -208,7 +208,7 @@ window.addEventListener("DOMContentLoaded", () => {
             },
             redirect: "follow",
             referrerPolicy: "no-referrer"
-        }; 
+        };
         const putRequest = {
             method: "PUT",
             mode: "cors",
@@ -223,13 +223,13 @@ window.addEventListener("DOMContentLoaded", () => {
             redirect: "follow",
             referrerPolicy: "no-referrer",
             body: JSON.stringify(requestBody)
-        }; 
+        };
         try {
-            const getResponse = await fetch (`${BASE_URL}/recipes?name=${updateRecipeName}`, getRequest);
+            const getResponse = await fetch(`${BASE_URL}/recipes?name=${updateRecipeName}`, getRequest);
             if (getResponse.ok) {
                 const recipeID = await getResponse.json()[0].id;
                 const putResponse = await fetch(`${BASE_URL}/recipes/${recipeID}`, putRequest);
-                if (putResponse.ok) { 
+                if (putResponse.ok) {
                     // Clear inputs
                     updateRecipeNameInput.value = '';
                     updateRecipeInstructionsInput.value = '';
@@ -269,6 +269,13 @@ window.addEventListener("DOMContentLoaded", () => {
      * - On success: refresh the list
      */
     async function deleteRecipe() {
+        /*
+        if (!sesstionStorage.getItem('is-admin')) {
+            console.log("Non-admin tried to delete recipe!");
+            alert("You need to be an admin to do this!");
+            return;
+        }*/
+
         const deleteRecipeName = deleteRecipeNameInput.value;
         const requestBody = { deleteRecipeName };
         const getRequest = {
@@ -284,7 +291,7 @@ window.addEventListener("DOMContentLoaded", () => {
             },
             redirect: "follow",
             referrerPolicy: "no-referrer"
-        }; 
+        };
         const delRequest = {
             method: "DELETE",
             mode: "cors",
@@ -299,13 +306,13 @@ window.addEventListener("DOMContentLoaded", () => {
             redirect: "follow",
             referrerPolicy: "no-referrer",
             body: JSON.stringify(requestBody)
-        }; 
+        };
         try {
-            const getResponse = await fetch (`${BASE_URL}/recipes?name=${deleteRecipeName}`, getRequest);
+            const getResponse = await fetch(`${BASE_URL}/recipes?name=${deleteRecipeName}`, getRequest);
             if (getResponse.ok) {
                 const recipeID = await getResponse.json()[0].id;
                 const delResponse = await fetch(`${BASE_URL}/recipes/${recipeID}`, delRequest);
-                if (delResponse.ok) { 
+                if (delResponse.ok) {
                     // Clear inputs
                     deleteRecipeName.value = '';
 
@@ -355,9 +362,9 @@ window.addEventListener("DOMContentLoaded", () => {
             },
             redirect: "follow",
             referrerPolicy: "no-referrer"
-        }; 
+        };
         try {
-            const response = await fetch (`${BASE_URL}/recipes`, requestOptions)
+            const response = await fetch(`${BASE_URL}/recipes`, requestOptions)
             if (response.ok) {
                 const recipes = await response.json();
                 refreshRecipeList(recipes);
@@ -414,9 +421,9 @@ window.addEventListener("DOMContentLoaded", () => {
             },
             redirect: "follow",
             referrerPolicy: "no-referrer"
-        }; 
+        };
         try {
-            const response = await fetch (`${BASE_URL}/logout`, requestOptions);
+            const response = await fetch(`${BASE_URL}/logout`, requestOptions);
             if (response.ok) {
                 sessionStorage.clear();
                 window.location.href = "../login/login-page.html";

@@ -50,14 +50,14 @@ getIngredients();
  * - On failure: alert the user
  */
 async function addIngredient() {
-    addIngredientName = addIngredientNameInput.value.trim();
+    const addIngredientName = addIngredientNameInput.value.trim();
 
     if (!addIngredientName) {
         console.log("Ingredient name empty.");
         alert("Please enter ingredient name.");
         return;
     }
-    const requestBody = { addIngredientName };
+    const requestBody = { "name": addIngredientName };
     const requestOptions = {
         method: "POST",
         mode: "cors",
@@ -155,14 +155,14 @@ async function deleteIngredient() {
     const listItems = ingredientListContainer.querySelectorAll('li');
     var targetIngredient = null;
     for (var i = 0; i < listItems.length; i++) {
-        const pHtml = item.querySelector('p');
+        const pHtml = listItems[i].querySelector('p');
         if (pHtml.innerText.trim() == deleteIngredientName){
             targetIngredient = listItems[i];
             break;
         }
     }
 
-    const ingredientId = ingredientToDelete.querySelector('p').id;
+    const ingredientId = targetIngredient.querySelector('p').id;
     const requestOptions = {
         method: "DELETE",
         mode: "cors",
@@ -178,7 +178,7 @@ async function deleteIngredient() {
         referrerPolicy: "no-referrer"
     };
     try {
-        const response = await fetch(`${BASE_URL}/ingredients/${ingredientId}`, DELETE);
+        const response = await fetch(`${BASE_URL}/ingredients/${ingredientId}`, requestOptions);
         if (response.ok) {
             deleteIngredientNameInput.value = '';
             getIngredients();
