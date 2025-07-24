@@ -91,16 +91,16 @@ window.addEventListener("DOMContentLoaded", () => {
             referrerPolicy: "no-referrer"
         };
         try {
-            const response = await fetch(`${BASE_URL}/recipes?term=${searchTerm}`, requestOptions);
+            const response = await fetch(`${BASE_URL}/recipes?name=${searchTerm}`, requestOptions);
 
             if (response.ok) {
-                const recipiesToShow = await response.json();
-                refreshRecipeList(recipiesToShow);
+                const recipesToShow = await response.json();
+                refreshRecipeList(recipesToShow);
                 return;
             }
 
-            console.log("Non 2xx status from GET in searchRecipes().");
-            alert("Uh-oh, an error occurred!");
+            console.log(`Non 2xx status from GET in searchRecipes(): ${response.status}`);
+            alert(`Uh-oh, an error occurred!: ${response.status}`);
             return;
 
         } catch (error) {
