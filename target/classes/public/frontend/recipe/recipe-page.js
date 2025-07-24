@@ -231,7 +231,9 @@ window.addEventListener("DOMContentLoaded", () => {
         try {
             const getResponse = await fetch(`${BASE_URL}/recipes?name=${updateRecipeName}`, getRequest);
             if (getResponse.ok) {
-                const recipeID = await getResponse.json()[0].id;
+                const jsonResponse = await getResponse.json();
+                const recipeID = jsonResponse[0].id;
+                 
                 const putResponse = await fetch(`${BASE_URL}/recipes/${recipeID}`, putRequest);
                 if (putResponse.ok) {
                     // Clear inputs
