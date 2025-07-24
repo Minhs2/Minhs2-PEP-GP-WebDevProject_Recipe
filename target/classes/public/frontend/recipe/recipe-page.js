@@ -39,7 +39,7 @@ window.addEventListener("DOMContentLoaded", () => {
      */
     if (sessionStorage.getItem('auth-token')) {
         logoutButtonInput.hidden = false;
-    } 
+    }
 
     /*
      * Show admin link if is-admin flag in sessionStorage is "true"
@@ -132,7 +132,7 @@ window.addEventListener("DOMContentLoaded", () => {
             alert("Please enter recipe instructions.");
             return;
         }
-        const requestBody = { addRecipeName, addRecipeInstructions };
+        const requestBody = { "name": addRecipeName, "instructions": addRecipeInstructions };
         const requestOptions = {
             method: "POST",
             mode: "cors",
@@ -157,15 +157,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 // Fetch latest and refresh list
                 getRecipes();
-
+                return;
             }
 
             // 401 means chef auth failed
-            else if (response.status = 401) {
+            else if (response.status == 401) {
                 console.log("Chef authentication failed.");
                 alert("Chef failed to authenticate.");
                 return;
             }
+
+            console.log(`Uh-oh, an error occurred!: ${response.status}`);
+            alert(`Uh-oh, an error occurred!: ${response.status}`);
+            return;
         } catch (error) {
             console.log(error);
             alert("Uh-oh, an error occurred!");
@@ -194,7 +198,7 @@ window.addEventListener("DOMContentLoaded", () => {
             alert("Please enter recipe instructions.");
             return;
         }
-        const requestBody = { updateRecipeName, updateRecipeInstructions };
+        const requestBody = { "name": updateRecipeName, "instructions": updateRecipeInstructions };
         const getRequest = {
             method: "GET",
             mode: "cors",
@@ -237,20 +241,23 @@ window.addEventListener("DOMContentLoaded", () => {
                     // Get and refresh recipes
                     getRecipes();
                     return;
-                } else if (putResponse.status = 404) {
+                } else if (putResponse.status == 404) {
                     console.log("Error fetching recipe ID.");
                     alert("Error fetching recipe ID.");
                     return;
                 }
+                console.log(`Unexpected status: ${response.status}`);
+                alert(`Uh-oh, an error occurred: ${response.status}`);
+                return;
             }
 
-            else if (getResponse.status = 404) {
+            else if (getResponse.status == 404) {
                 console.log(`No recipes with name ${updateRecipeName} found.`);
                 alert(`No recipes with name ${updateRecipeName} found.`);
                 return;
             }
-            console.log(`Unexpected status.`);
-            alert("Uh-oh, an error occurred: Unexpected status.");
+            console.log(`Unexpected status: ${response.status}`);
+            alert(`Uh-oh, an error occurred: ${response.status}`);
             return;
         } catch (error) {
             console.log(error);
@@ -310,7 +317,10 @@ window.addEventListener("DOMContentLoaded", () => {
         try {
             const getResponse = await fetch(`${BASE_URL}/recipes?name=${deleteRecipeName}`, getRequest);
             if (getResponse.ok) {
-                const recipeID = await getResponse.json()[0].id;
+                const responseData = await getResponse.json();
+                
+                const recipeID = responseData[0].id;
+
                 const delResponse = await fetch(`${BASE_URL}/recipes/${recipeID}`, delRequest);
                 if (delResponse.ok) {
                     // Clear inputs
@@ -320,14 +330,14 @@ window.addEventListener("DOMContentLoaded", () => {
                     getRecipes();
                     return;
 
-                } else if (putResponse.status = 404) {
+                } else if (putResponse.status == 404) {
                     console.log("Error fetching recipe ID.");
                     alert("Error fetching recipe ID.");
                     return;
                 }
             }
 
-            else if (getResponse.status = 404) {
+            else if (getResponse.status == 404) {
                 console.log(`No recipes with name ${updateRecipeName} found.`);
                 alert(`No recipes with name ${updateRecipeName} found.`);
                 return;
@@ -337,7 +347,7 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
         } catch (error) {
             console.log(error);
-            alert("Uh-oh, an error occurred!");
+            alert(`Uh-oh, an error occurred!: ${error}`);
             return;
         }
     }
@@ -370,7 +380,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 refreshRecipeList(recipes);
                 return;
             }
-            else if (response.status = 404) {
+            else if (response.status == 404) {
                 console.log("No recipes found.");
                 alert("No recipes found.");
                 return;
@@ -395,7 +405,7 @@ window.addEventListener("DOMContentLoaded", () => {
         for (var i = 0; i < recipiesToShow.length; i++) {
             var recipe = recipiesToShow[i];
             var listElement = document.createElement('li');
-            listElement.innerHTML = `<p> ${recipe.name}\n${recipe.instructions} </p>`
+            listElement.innerHTML = `<p>${recipe.name}: ${recipe.instructions}</p>`
             recipeListInput.appendChild(listElement);
         }
     }
